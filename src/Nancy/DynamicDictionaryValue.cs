@@ -1,17 +1,17 @@
-﻿namespace Nancy
+﻿using System;
+using System.ComponentModel;
+using System.Dynamic;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Reflection;
+
+using Microsoft.CSharp.RuntimeBinder;
+using Nancy.Extensions;
+
+using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
+
+namespace Nancy
 {
-    using System;
-    using System.ComponentModel;
-    using System.Dynamic;
-    using System.Globalization;
-    using System.Linq.Expressions;
-    using System.Reflection;
-
-    using Microsoft.CSharp.RuntimeBinder;
-    using Extensions;
-
-    using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
-
     /// <summary>
     /// A value that is stored inside a <see cref="DynamicDictionary"/> instance.
     /// </summary>

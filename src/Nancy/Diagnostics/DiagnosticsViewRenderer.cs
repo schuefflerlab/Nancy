@@ -57,7 +57,7 @@ namespace Nancy.Diagnostics
             var fullName = string.Concat(name, ".sshtml");
             var stream = GetBodyStream(fullName);
             var location = GetViewLocationResult(fullName, stream);
-            var cache = new DefaultViewCache(this.environment);
+            var cache = new ThreadSafeViewCache(this.environment);
 
             context.Items.Add(CsrfToken.DEFAULT_CSRF_KEY, "DIAGNOSTICSTOKEN");
 
