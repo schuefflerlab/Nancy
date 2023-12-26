@@ -16,10 +16,10 @@
         /// <param name="path">The path of the folder where the views should be looked for.</param>
         /// <param name="supportedViewExtensions">A list of view extensions to look for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing view locations and contents readers.</returns>
-        public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, IEnumerable<string> supportedViewExtensions)
+        public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, string[] excludePaths, IEnumerable<string> supportedViewExtensions)
         {
             return supportedViewExtensions
-                .SelectMany(extension => GetFilenames(path, extension))
+                .SelectMany(extension => GetFilenames(path, excludePaths, extension))
                 .Distinct()
                 .Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
                 .ToList();
@@ -67,11 +67,21 @@
             return supportedViewExtensions.Contains(extension.Substring(1));
         }
 
-        private static IEnumerable<string> GetFilenames(string path, string extension)
+        private static IEnumerable<string> GetFilenames(string path, string[] excludePaths, string extension)
         {
-            return !Directory.Exists(path) 
-                ? Enumerable.Empty<string>()
-                : Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);
+            if (!Directory.Exists(path))
+            {
+                return Enumerable.Empty<string>();
+            }
+            else {
+                IEnumerable<string> files = Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.TopDirectoryOnly);
+                foreach (string subdir in Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly).
+                    Where(sd => sd != "." && sd != ".." && !excludePaths.Any(d => sd.ToLower().Contains(d.ToLower()))))
+                {
+                    files = files.Concat(GetFilenames(Path.Combine(path, subdir), excludePaths, extension));
+                }
+                return files;
+            }
         }
     }
 }

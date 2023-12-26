@@ -8,5 +8,10 @@ namespace Nancy.Hosting.Aspnet
         {
             return HostingEnvironment.MapPath("~/");
         }
+
+        public string[] GetExcludePaths()
+        {
+            return new string[] { System.IO.Path.Combine(GetRootPath(), "data") };
+        }
     }
 }

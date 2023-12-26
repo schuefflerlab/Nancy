@@ -11,6 +11,7 @@
     {
         private readonly IFileSystemReader fileSystemReader;
         private readonly string rootPath;
+        private readonly string[] excludedPaths;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class, with
@@ -33,6 +34,7 @@
         {
             this.fileSystemReader = fileSystemReader;
             this.rootPath = rootPathProvider.GetRootPath();
+            this.excludedPaths = rootPathProvider.GetExcludePaths();
         }
 
         /// <summary>
@@ -48,7 +50,7 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            return this.GetViewsFromPath(this.rootPath, supportedViewExtensions);
+            return this.GetViewsFromPath(this.rootPath, this.excludedPaths, supportedViewExtensions);
         }
 
         /// <summary>
@@ -98,9 +100,9 @@
                        this.fileSystemReader);
         }
 
-        private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, IEnumerable<string> supportedViewExtensions)
+        private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, string[] excludePaths, IEnumerable<string> supportedViewExtensions)
         {
-            var matches = this.fileSystemReader.GetViewsWithSupportedExtensions(path, supportedViewExtensions);
+            var matches = this.fileSystemReader.GetViewsWithSupportedExtensions(path, excludePaths,supportedViewExtensions);
 
             return from match in matches
                    select

@@ -16,8 +16,13 @@
 #if CORE
             return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
 #else
-            return AppDomain.CurrentDomain.BaseDirectory;
+            return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
 #endif
+        }
+
+        public string[] GetExcludePaths()
+        {
+            return new string[] { System.IO.Path.Combine(GetRootPath(), "data") };
         }
     }
 }
