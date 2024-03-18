@@ -2,10 +2,10 @@
   <PropertyGroup>
     <Description>Enables using the DotLiquid view engine with Nancy.</Description>
     <PackageTags>$(PackageTags);View Engine;DotLiquid</PackageTags>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotLiquid" Version="2.0.64" />
+    <PackageReference Include="DotLiquid" Version="2.2.692" />
   </ItemGroup>
 </Project>
